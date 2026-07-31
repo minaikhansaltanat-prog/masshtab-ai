@@ -84,6 +84,7 @@
   var video = document.getElementById("heroVideo");
   var playBtn = document.getElementById("heroPlay");
   var timeBadge = document.getElementById("heroVideoTime");
+  var videoFrame = document.getElementById("heroVideoFrame");
 
   function formatTime(sec) {
     if (!isFinite(sec)) return "";
@@ -116,6 +117,7 @@
         video.setAttribute("controls", "");
         video.play();
         playBtn.classList.add("is-hidden");
+        if (videoFrame) videoFrame.classList.add("is-playing");
       });
     }
   }

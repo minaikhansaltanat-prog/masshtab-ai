@@ -193,7 +193,7 @@
   }
   @media (max-width:900px){ .hero{ padding-top:calc(var(--header-h) + 36px); padding-bottom:44px; } }
 
-  .hero-grid{ display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:center; position:relative; z-index:2; }
+  .hero-grid{ display:grid; grid-template-columns:1fr 1.05fr; gap:48px; align-items:center; position:relative; z-index:2; }
   @media (max-width:960px){ .hero-grid{ grid-template-columns:1fr; gap:40px; } }
 
   .hero-copy h1{ font-size:clamp(34px, 4.6vw, 56px); line-height:1.06; margin:16px 0 20px; }
@@ -211,11 +211,13 @@
   /* ---------- Hero video card ---------- */
   .hero-video-wrap{ position:relative; display:flex; justify-content:center; }
   .hero-video-frame{
-    position:relative; width:min(320px, 78vw); aspect-ratio:9/16; border-radius:26px;
+    position:relative; width:min(440px, 88vw); aspect-ratio:1448/1086; border-radius:22px;
     background:var(--bg-2); border:1px solid var(--glass-border-strong);
     box-shadow:var(--shadow-glow);
     overflow:hidden;
+    transition:width .4s cubic-bezier(.4,0,.2,1), aspect-ratio .4s cubic-bezier(.4,0,.2,1);
   }
+  .hero-video-frame.is-playing{ width:min(300px, 80vw); aspect-ratio:9/16; border-radius:26px; }
   .hero-video-frame::before{
     content:''; position:absolute; inset:-1px; border-radius:26px; padding:1px;
     background:linear-gradient(160deg, rgba(79,140,255,.7), rgba(255,255,255,.05) 30%, rgba(99,217,255,.5));
@@ -234,24 +236,23 @@
     font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--text-1);
     background:rgba(6,9,15,.55); backdrop-filter:blur(8px); border:1px solid var(--glass-border);
     padding:6px 10px; border-radius:20px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
   }
+  .hero-video-frame.is-playing .hero-video-tag{ opacity:1; }
   .hero-video-tag .dot{ width:6px; height:6px; border-radius:50%; background:var(--danger); box-shadow:0 0 8px var(--danger); }
 
   .hero-video-time{
     position:absolute; bottom:14px; right:14px; z-index:4; font-family:var(--num); font-size:11px; color:var(--text-1);
     background:rgba(6,9,15,.55); backdrop-filter:blur(8px); border:1px solid var(--glass-border);
-    padding:4px 9px; border-radius:8px; opacity:0; transition:opacity .3s ease;
+    padding:4px 9px; border-radius:8px; opacity:0; pointer-events:none; transition:opacity .3s ease;
   }
-  .hero-video-time.is-visible{ opacity:1; }
+  .hero-video-frame.is-playing .hero-video-time.is-visible{ opacity:1; }
 
   .hero-play{
-    position:absolute; z-index:4; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.96); color:var(--bg-1);
-    display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 14px 34px rgba(0,0,0,.5);
-    transition:transform .2s ease, background-color .2s ease;
+    position:absolute; inset:0; z-index:4; width:100%; height:100%; border-radius:inherit;
+    background:transparent; cursor:pointer; transition:background-color .2s ease;
   }
-  .hero-play:hover{ transform:translate(-50%,-50%) scale(1.06); }
-  .hero-play svg{ margin-left:3px; }
+  .hero-play:hover{ background:rgba(0,0,0,.12); }
   .hero-play.is-hidden{ display:none; }
 
   /* ---------- Stats strip ---------- */
@@ -475,13 +476,11 @@
         <div class="hero-video-wrap reveal is-in">
           <div class="hero-video-frame" id="heroVideoFrame">
             <span class="hero-video-tag"><span class="dot" aria-hidden="true"></span><span data-i18n="hero.videoLabel">Презентация проекта</span></span>
-            <video id="heroVideo" playsinline preload="metadata" muted>
+            <video id="heroVideo" playsinline preload="metadata" muted poster="assets/img/video-cover.png">
               <source src="assets/video/hero.mp4" type="video/mp4">
             </video>
             <span class="hero-video-time" id="heroVideoTime"></span>
-            <button class="hero-play" id="heroPlay" type="button" data-i18n-aria="hero.playAria" aria-label="Воспроизвести видео">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            </button>
+            <button class="hero-play" id="heroPlay" type="button" data-i18n-aria="hero.playAria" aria-label="Воспроизвести видео"></button>
           </div>
         </div>
       </div>
