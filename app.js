@@ -80,47 +80,44 @@
     if (window.innerWidth > 900 && document.body.classList.contains("menu-open")) closeMenu();
   });
 
-  /* ---------- Hero video: adaptive load ---------- */
+  /* ---------- Hero video: click-to-play, with sound ---------- */
   var video = document.getElementById("heroVideo");
   var playBtn = document.getElementById("heroPlay");
-  var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
-  var isSlow = !!(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "")));
+  var timeBadge = document.getElementById("heroVideoTime");
 
-  function startVideo() {
-    if (!video) return;
-    video.setAttribute("src", "assets/video/hero.mp4");
-    video.load();
-    var playPromise = video.play();
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(function () {
-        /* autoplay blocked — keep play button visible */
-      });
-    }
-    video.addEventListener("playing", function () {
-      video.classList.add("is-visible");
-      if (playBtn) playBtn.classList.add("is-hidden");
-    });
+  function formatTime(sec) {
+    if (!isFinite(sec)) return "";
+    var m = Math.floor(sec / 60);
+    var s = Math.floor(sec % 60);
+    return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
   if (video) {
-    if (!isSlow) {
-      startVideo();
-    }
+    video.addEventListener("loadedmetadata", function () {
+      if (timeBadge) {
+        timeBadge.textContent = formatTime(video.duration);
+        timeBadge.classList.add("is-visible");
+      }
+    });
+
+    video.addEventListener("timeupdate", function () {
+      if (timeBadge && !video.paused) {
+        timeBadge.textContent = formatTime(video.duration - video.currentTime);
+      }
+    });
+
+    video.addEventListener("pause", function () {
+      if (timeBadge) timeBadge.textContent = formatTime(video.duration);
+    });
+
     if (playBtn) {
       playBtn.addEventListener("click", function () {
-        startVideo();
+        video.muted = false;
+        video.setAttribute("controls", "");
+        video.play();
+        playBtn.classList.add("is-hidden");
       });
     }
-  }
-
-  /* ---------- Hero ledger strikethrough trigger ---------- */
-  var heroSlip = document.getElementById("heroSlip");
-  if (heroSlip) {
-    requestAnimationFrame(function () {
-      setTimeout(function () {
-        heroSlip.classList.add("is-active");
-      }, 350);
-    });
   }
 
   /* ---------- Scroll reveal ---------- */
