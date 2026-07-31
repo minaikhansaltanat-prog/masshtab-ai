@@ -1,0 +1,19 @@
+node_modules/
+temporary screenshots/
+.claude/
+
+# Raw uploads (already copied into assets/ with clean names)
+Photo/
+Video/
+
+# Local UI/UX skill toolkit files (not part of the site)
+SKILL.md
+SKILL df.md
+core.py
+core.cpython-314.pyc
+design_system.py
+design_system.cpython-314.pyc
+search.py
+search.cpython-314.pyc
+plugin.json
+data/
